@@ -9,7 +9,7 @@ services:
       MYSQL_USER: hotel_user
       MYSQL_PASSWORD: hotel_password
     ports:
-      - "3306:3306"
+      - "4000:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     healthcheck:
