@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Response, status
+from fastapi import APIRouter, Depends, Query, Response, status
 from sqlalchemy.orm import Session
 
 from src.database.session import get_db
@@ -14,7 +14,7 @@ router = APIRouter(prefix="/rooms", tags=["rooms"])
 def read_rooms(
     skip: int = 0,
     limit: int = 20,
-    status_filter: RoomStatus | None = None,
+    status_filter: RoomStatus | None = Query(default=None, alias="status"),
     db: Session = Depends(get_db),
 ):
     rooms, total = list_rooms(db, skip=skip, limit=limit, status_filter=status_filter)

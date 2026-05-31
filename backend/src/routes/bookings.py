@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
 
 from src.database.session import get_db
@@ -24,7 +24,7 @@ router = APIRouter(prefix="/bookings", tags=["bookings"])
 def read_bookings(
     skip: int = 0,
     limit: int = 20,
-    status_filter: BookingStatus | None = None,
+    status_filter: BookingStatus | None = Query(default=None, alias="status"),
     db: Session = Depends(get_db),
 ):
     return list_bookings(db, skip=skip, limit=limit, status_filter=status_filter)

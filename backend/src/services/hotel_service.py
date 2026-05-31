@@ -65,13 +65,13 @@ def update_room(db: Session, room_id: int, payload: RoomUpdate) -> Room:
 
 def delete_room(db: Session, room_id: int) -> None:
     room = get_room(db, room_id)
-    active_booking = (
-        db.query(Booking)
-        .filter(Booking.room_id == room_id, Booking.status.in_(ACTIVE_BOOKING_STATUSES))
-        .first()
-    )
+    active_booking = db.query(Booking).filter(Booking.room_id == room_id, Booking.status.in_(ACTIVE_BOOKING_STATUSES)).first()
     if active_booking:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Room has an active booking")
+
+    booking_history = db.query(Booking).filter(Booking.room_id == room_id).first()
+    if booking_history:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Room has booking history")
 
     db.delete(room)
     db.commit()

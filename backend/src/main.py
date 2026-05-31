@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from src.config.settings import get_settings
 from src.database.base import Base
+from src.database.migrations.schema_patches import run_schema_patches
 from src.database.seeders.seed import seed_initial_data
 from src.database.session import SessionLocal, engine
 from src.models import Booking, Customer, Invoice, Room
@@ -33,6 +34,7 @@ def create_app() -> FastAPI:
     @app.on_event("startup")
     def on_startup() -> None:
         Base.metadata.create_all(bind=engine)
+        run_schema_patches(engine)
         db = SessionLocal()
         try:
             seed_initial_data(db)
